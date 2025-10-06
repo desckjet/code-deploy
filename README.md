@@ -15,6 +15,7 @@ This repository contains a minimal application designed to plug into the Terrafo
 ├── html/
 │   └── index.html         # Landing page served by NGINX
 └── scripts/               # Lifecycle hooks executed by CodeDeploy
+    ├── clean_destination  # Cleans /usr/share/nginx/html before deployment
     ├── install_dependencies
     ├── start_server
     └── stop_server
@@ -22,7 +23,20 @@ This repository contains a minimal application designed to plug into the Terrafo
 
 Update `html/index.html` to change the page served by NGINX. Each push to the monitored branch triggers the pipeline and CodeDeploy rolls out the new version to the target instances.
 
-## Instance requirements
+## Deployment Process
+
+The CodeDeploy application follows this lifecycle:
+
+1. **ApplicationStop**: Stops the NGINX service
+2. **BeforeInstall**: 
+   - Installs dependencies (NGINX)
+   - Cleans the destination directory (`/usr/share/nginx/html`) to prevent file conflicts
+3. **Install**: Copies new content from the artifact to the destination
+4. **AfterInstall**: Starts the NGINX service
+
+The `clean_destination` script ensures that existing files don't conflict with new deployments, resolving issues where CodeDeploy fails due to existing files at the destination.
+
+## Instance requirements (Deployed by exercise4)
 
 - CodeDeploy agent installed and running. Amazon Linux 2023 is the latest general-purpose Amazon Linux release, but it does **not** ship with the agent preinstalled, so keep it running via user data or SSM.
 - Permission to execute `systemctl` as root (the scripts use `sudo`).

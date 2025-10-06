@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Clean the destination directory before installing new files
+echo "Cleaning destination directory: /usr/share/nginx/html"
+
+# Remove all files in the nginx html directory except for the default nginx files we want to keep
+if [ -d "/usr/share/nginx/html" ]; then
+    # Remove all files but keep the directory structure
+    rm -rf /usr/share/nginx/html/*
+    echo "Destination directory cleaned successfully"
+else
+    echo "Destination directory does not exist, creating it"
+    mkdir -p /usr/share/nginx/html
+fi

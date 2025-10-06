@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "[buildspec] preparing nginx artifact"
+  build:
+    commands:
+      - set -euxo pipefail
+      - rm -rf build
+      - mkdir -p build/scripts build/html
+      - cp appspec.yml build/
+      - cp -r scripts/* build/scripts/
+      - cp -r html/* build/html/
+      - chmod +x build/scripts/*
+      - ls -R build
+artifacts:
+  files:
+    - '**/*'
+  base-directory: build

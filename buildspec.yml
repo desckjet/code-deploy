@@ -6,7 +6,7 @@ phases:
       - echo "[buildspec] preparing nginx artifact"
   build:
     commands:
-      - set -euxo pipefail
+      - set -eux
       - rm -rf build
       - mkdir -p build/scripts build/html
       - cp appspec.yml build/
